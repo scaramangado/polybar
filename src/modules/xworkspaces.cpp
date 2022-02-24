@@ -44,6 +44,7 @@ namespace modules {
     m_click = m_conf.get(name(), "enable-click", m_click);
     m_scroll = m_conf.get(name(), "enable-scroll", m_scroll);
     m_revscroll = m_conf.get(name(), "reverse-scroll", m_revscroll);
+    m_ignoredesktopviewport = m_conf.get(name(), "ignore-desktop-viewport", m_ignoredesktopviewport);
 
     // Initialize ewmh atoms
     if ((m_ewmh = ewmh_util::initialize()) == nullptr) {
@@ -206,7 +207,10 @@ namespace modules {
      * We use this to map workspaces to viewports, desktop i is at position
      * ws_positions[i].
      */
-    vector<position> ws_positions = ewmh_util::get_desktop_viewports();
+    vector<position> ws_positions;
+    if(!m_ignoredesktopviewport) {
+      ws_positions = ewmh_util::get_desktop_viewports();
+    }
 
     auto num_desktops = m_desktop_names.size();
 
